@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>Organización de Financiamiento de la Realeza | Banco Central</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --gold-dark: #8b6914;
+      --gold-mid: #c9a84c;
+      --gold-light: #e8d5a3;
+      --navy-dark: #0a1a2f;
+      --navy-mid: #142b47;
+      --emerald: #1a5c3a;
+      --crimson: #a33327;
+      --cream: #fdf9f2;
+      --text-dark: #1a1a1a;
+      --text-mid: #4a3f35;
+      --shadow-lg: 0 25px 50px rgba(0,0,0,0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b2d45 40%, #2c3e50 100%);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.04"><path fill="%23c9a84c" d="M50 0L60 30L90 20L70 45L100 50L70 55L90 80L60 70L50 100L40 70L10 80L30 55L0 50L30 45L10 20L40 30Z"/><circle cx="50" cy="50" r="15" fill="%23c9a84c"/><circle cx="50" cy="50" r="8" fill="%23fdf9f2"/></svg>');
+      background-size: 500px 500px;
+      background-position: center;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.5;
+    }
+
+    .bank-top-bar {
+      width: 100%;
+      background: var(--navy-dark);
+      color: var(--gold-light);
+      padding: 0.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      border-bottom: 2px solid var(--gold-mid);
+      z-index: 50;
+      position: sticky;
+      top: 0;
+    }
+    .bank-top-bar span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .main-bank-container {
+      max-width: 1400px;
+      width: 100%;
+      background: var(--cream);
+      border-radius: 0 0 32px 32px;
+      box-shadow: var(--shadow-lg);
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid var(--gold-mid);
+      border-top: none;
+      position: relative;
+      z-index: 10;
+    }
+
+    .bank-header {
+      background: linear-gradient(145deg, #f5efe4 0%, #e8dcc8 100%);
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--gold-mid);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .bank-logo {
+      width: 80px;
+      height: 80px;
+      background: var(--navy-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-mid);
+      font-size: 2.8rem;
+      border: 3px solid var(--gold-mid);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .bank-logo:hover {
+      transform: scale(1.05);
+    }
+    .bank-title {
+      flex: 1;
+    }
+    .bank-title h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--navy-dark);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .bank-title .sub {
+      color: var(--crimson);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .bank-balance {
+      background: var(--navy-dark);
+      padding: 0.8rem 1.5rem;
+      border-radius: 16px;
+      color: var(--gold-light);
+      text-align: right;
+      border: 2px solid var(--gold-mid);
+      position: relative;
+    }
+    .bank-balance .label {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      opacity: 0.8;
+    }
+    .bank-balance .amount {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffd700;
+    }
+
+    .admin-profile-btn {
+      background: transparent;
+      border: 2px solid var(--gold-mid);
+      color: var(--gold-light);
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-left: 0.5rem;
+    }
+    .admin-profile-btn:hover {
+      background: var(--gold-mid);
+      color: var(--navy-dark);
+    }
+
+    .country-strip {
+      background: #1a2a3a;
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem 1.2rem;
+      border-bottom: 1px solid var(--gold-mid);
+    }
+    .country-strip .flag-item {
+      color: var(--gold-light);
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bank-tabs {
+      display: flex;
+      gap: 0.3rem;
+      padding: 0.8rem 1.5rem;
+      background: #f0e8da;
+      border-bottom: 2px solid var(--gold-mid);
+      overflow-x: auto;
+    }
+    .bank-tab {
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px 8px 0 0;
+      background: transparent;
+      border: 1px solid transparent;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      color: var(--navy-dark);
+      letter-spacing: 0.5px;
+    }
+    .bank-tab.active {
+      background: var(--navy-dark);
+      color: var(--gold-light);
+      border-color: var(--gold-mid);
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+    }
+    .bank-tab.admin-tab {
+      background: var(--crimson);
+      color: white;
+      display: none;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .panel-content {
+      padding: 2rem;
+      min-height: 400px;
+    }
+    .panel {
+      display: none;
+      animation: bankFade 0.3s ease;
+    }
+    .panel.active {
+      display: block;
+    }
+    @keyframes bankFade {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bank-form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .input-field {
+      display: flex;
+      flex-direction: column;
+    }
+    .input-field label {
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--navy-dark);
+      margin-bottom: 0.3rem;
+    }
+    .input-field input, .input-field select {
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: white;
+      font-size: 0.9rem;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .btn-primary {
+      background: var(--navy-dark);
+      color: var(--gold-light);
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      border: 2px solid var(--gold-mid);
+    }
+    .btn-primary:hover {
+      background: #1a3a5c;
+      transform: translateY(-2px);
+    }
+    .btn-success {
+      background: var(--emerald);
+      border-color: #2e8b57;
+    }
+
+    .bank-ledger {
+      background: white;
+      border-radius: 12px;
+      border: 2px solid var(--gold-mid);
+      overflow: hidden;
+    }
+    .bank-ledger-header {
+      background: var(--navy-dark);
+      color: var(--gold-light);
+      padding: 0.8rem 1.2rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .ledger-table th {
+      background: #f0e8da;
+      color: var(--navy-dark);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.7rem;
+      text-align: left;
+      border-bottom: 2px solid var(--gold-mid);
+    }
+    .ledger-table td {
+      padding: 0.6rem 0.7rem;
+      border-bottom: 1px solid #e0d5c5;
+      font-size: 0.85rem;
+    }
+    .badge-success { background: #d4edda; color: #155724; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 600; font-size: 0.7rem; }
+    .badge-pending { background: #fff3cd; color: #856404; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 600; font-size: 0.7rem; }
+    .badge-rejected { background: #f8d7da; color: #721c24; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 600; font-size: 0.7rem; }
+    .btn-action {
+      background: var(--crimson);
+      color: white;
+      border: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      margin: 1px;
+    }
+    .btn-action.activate { background: var(--emerald); }
+    .btn-action.reject { background: #555; }
+
+    .admin-bank-panel {
+      background: #f8f4ec;
+      border-radius: 16px;
+      border: 3px solid var(--gold-mid);
+      padding: 1.5rem;
+    }
+
+    .shipping-card {
+      background: white;
+      border-radius: 12px;
+      border: 2px solid var(--gold-mid);
+      padding: 1.5rem;
+    }
+    .photo-bank-area {
+      background: #f8f4ec;
+      border: 3px dashed var(--gold-mid);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .photo-bank-area i { font-size: 3.5rem; color: var(--gold-dark); }
+
+    .auth-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--gold-mid);
+      padding-bottom: 0.5rem;
+    }
+    .auth-tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--navy-dark);
+      border-bottom: 3px solid transparent;
+    }
+    .auth-tab-btn.active { border-bottom-color: var(--gold-mid); color: var(--gold-dark); }
+
+    .hidden-admin-area {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .admin-bank-card {
+      background: var(--cream);
+      max-width: 420px;
+      width: 90%;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      border: 3px solid var(--gold-mid);
+    }
+    .admin-bank-input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 0.8rem;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .btn-admin-login {
+      background: var(--crimson);
+      color: white;
+      padding: 0.9rem;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 0.6rem;
+    }
+    .btn-close-admin {
+      background: transparent;
+      border: 2px solid var(--gold-mid);
+      color: var(--navy-dark);
+      padding: 0.7rem;
+      width: 100%;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: var(--gold-dark);
+      font-size: 0.75rem;
+      background: #f0e8da;
+      border-top: 2px solid var(--gold-mid);
+    }
+
+    .institutional-info {
+      background: #f8f4ec;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px solid var(--gold-mid);
+      font-size: 0.8rem;
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: 12px;
+      border: 2px solid var(--gold-mid);
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .user-contact-info {
+      display: none;
+      margin-top: 1rem;
+      background: #f8f4ec;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid var(--gold-mid);
+    }
+
+    @media (max-width: 768px) {
+      .panel-content { padding: 1rem; }
+      .bank-header { padding: 0.8rem; }
+      .bank-balance .amount { font-size: 1.2rem; }
+      .bank-title h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bank-top-bar">
+    <span><i class="fas fa-shield-alt"></i> SEGURO BANCARIO GARANTIZADO</span>
+    <span><i class="fas fa-lock"></i> SSL 256-BIT · TRANSFERENCIA PROTEGIDA</span>
+  </div>
+
+  <div class="main-bank-container">
+    <div class="bank-header">
+      <div class="bank-logo" id="bankLogoTripleClick"><i class="fas fa-crown"></i></div>
+      <div class="bank-title">
+        <h1>Organización de Financiamiento de la Realeza</h1>
+        <div class="sub">Royalty Funding Organization · Madrid, España</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.8rem;">
+        <div class="bank-balance">
+          <div class="label"><i class="fas fa-dollar-sign"></i> VALOR POR REGISTRO</div>
+          <div class="amount">$550,000</div>
+          <div class="label" style="font-size:0.6rem;">USD · GARANTIZADO</div>
+        </div>
+        <button class="admin-profile-btn" id="adminProfileBtn" title="Acceso Administrativo">
+          <i class="fas fa-user-shield"></i> ADMIN
+        </button>
+      </div>
+    </div>
+
+    <div class="country-strip">
+      <span class="flag-item"><span>🇪🇸</span> España</span>
+      <span class="flag-item"><span>🇲🇽</span> México</span>
+      <span class="flag-item"><span>🇨🇴</span> Colombia</span>
+      <span class="flag-item"><span>🇦🇷</span> Argentina</span>
+      <span class="flag-item"><span>🇵🇪</span> Perú</span>
+      <span class="flag-item"><span>🇨🇱</span> Chile</span>
+      <span class="flag-item"><span>🇪🇨</span> Ecuador</span>
+      <span class="flag-item"><span>🇬🇹</span> Guatemala</span>
+      <span class="flag-item"><span>🇨🇺</span> Cuba</span>
+      <span class="flag-item"><span>🇩🇴</span> Rep. Dominicana</span>
+      <span class="flag-item"><span>🇭🇳</span> Honduras</span>
+      <span class="flag-item"><span>🇵🇾</span> Paraguay</span>
+      <span class="flag-item"><span>🇸🇻</span> El Salvador</span>
+      <span class="flag-item"><span>🇳🇮</span> Nicaragua</span>
+      <span class="flag-item"><span>🇨🇷</span> Costa Rica</span>
+      <span class="flag-item"><span>🇵🇦</span> Panamá</span>
+      <span class="flag-item"><span>🇺🇾</span> Uruguay</span>
+      <span class="flag-item"><span>🇧🇴</span> Bolivia</span>
+      <span class="flag-item"><span>🇻🇪</span> Venezuela</span>
+      <span class="flag-item"><span>🇵🇷</span> Puerto Rico</span>
+    </div>
+
+    <div class="bank-tabs" id="bankTabContainer">
+      <button class="bank-tab active" data-tab="registro"><i class="fas fa-file-signature"></i> REGISTRO</button>
+      <button class="bank-tab" data-tab="envio"><i class="fas fa-truck"></i> ENVÍO</button>
+      <button class="bank-tab" data-tab="foto"><i class="fas fa-camera"></i> FOTO</button>
+      <button class="bank-tab" data-tab="institucional"><i class="fas fa-building"></i> INSTITUCIONAL</button>
+      <button class="bank-tab" data-tab="contacto"><i class="fas fa-envelope"></i> CONTACTO</button>
+      <button class="bank-tab admin-tab" data-tab="admin" id="adminTabBtn"><i class="fas fa-user-shield"></i> ADMIN PANEL</button>
+    </div>
+
+    <div class="panel-content">
+      <div id="registro" class="panel active">
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" data-auth="signup">📝 REGISTRARSE</button>
+          <button class="auth-tab-btn" data-auth="login">🔑 INICIAR SESIÓN</button>
+        </div>
+        <div id="signupForm" class="auth-form">
+          <h3 style="color: var(--navy-dark); margin-bottom: 1rem;">Registro Bancario Oficial</h3>
+          <div class="bank-form-grid">
+            <div class="input-field"><label>Nombre Completo</label><input type="text" id="signupFullName" placeholder="Nombre y apellidos"></div>
+            <div class="input-field"><label>Correo Electrónico</label><input type="email" id="signupEmail" placeholder="correo@ejemplo.com"></div>
+            <div class="input-field"><label>Contraseña</label><input type="password" id="signupPassword" placeholder="Mínimo 6 caracteres"></div>
+            <div class="input-field"><label>Confirmar Contraseña</label><input type="password" id="signupConfirmPassword" placeholder="Repita la contraseña"></div>
+            <div class="input-field"><label>País</label>
+              <select id="signupCountry">
+                <option>España</option><option>México</option><option>Colombia</option><option>Argentina</option><option>Perú</option><option>Chile</option><option>Ecuador</option><option>Guatemala</option><option>Cuba</option><option>Rep. Dominicana</option><option>Honduras</option><option>Paraguay</option><option>El Salvador</option><option>Nicaragua</option><option>Costa Rica</option><option>Panamá</option><option>Uruguay</option><option>Bolivia</option><option>Venezuela</option><option>Puerto Rico</option>
+              </select>
+            </div>
+            <div class="input-field"><label>Ciudad</label><input type="text" id="signupCity" placeholder="Ciudad"></div>
+            <div class="input-field"><label>Dirección de Envío</label><input type="text" id="signupAddress" placeholder="Calle, número"></div>
+            <div class="input-field"><label>Teléfono</label><input type="tel" id="signupPhone" placeholder="+34 600 000 000"></div>
+          </div>
+          <button class="btn-primary" id="signupBtn"><i class="fas fa-check-circle"></i> SOLICITAR REGISTRO</button>
+        </div>
+        <div id="loginForm" class="auth-form" style="display:none;">
+          <h3 style="color: var(--navy-dark); margin-bottom: 1rem;">Iniciar Sesión Bancaria</h3>
+          <div class="bank-form-grid" style="max-width:500px;">
+            <div class="input-field"><label>Correo Electrónico</label><input type="email" id="loginEmail" placeholder="correo@ejemplo.com"></div>
+            <div class="input-field"><label>Contraseña</label><input type="password" id="loginPassword" placeholder="Contraseña"></div>
+          </div>
+          <button class="btn-primary btn-success" id="loginBtn"><i class="fas fa-sign-in-alt"></i> INICIAR SESIÓN</button>
+          <p id="loginStatus" style="margin-top:1rem; font-weight:600; text-align:center;"></p>
+          <div id="userContactAfterLogin" class="user-contact-info"></div>
+        </div>
+      </div>
+
+      <div id="envio" class="panel">
+        <h3>Detalles de Envío Bancario</h3>
+        <div class="shipping-card">
+          <p id="shipmentInfo">Complete el registro para ver el estado del envío.</p>
+          <div id="shipmentDetails" style="display: none;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+              <span class="badge-success"><i class="fas fa-truck"></i> EN PREPARACIÓN</span>
+              <span class="tracking-number">SP-550K-001</span>
+            </div>
+            <p><strong>Dirección:</strong> <span id="shipAddress"></span></p>
+            <p><strong>País:</strong> <span id="shipCountry"></span></p>
+            <p><strong>Valor:</strong> $550,000 USD</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="foto" class="panel">
+        <h3>Foto de Perfil Bancaria</h3>
+        <div class="photo-bank-area" id="photoDrop">
+          <i class="fas fa-camera-retro"></i>
+          <p><strong>Subir foto de perfil</strong> (obligatoria para activación)</p>
+          <input type="file" id="photoInput" accept="image/*" style="display:none;">
+          <p id="fileName">Ningún archivo seleccionado</p>
+        </div>
+      </div>
+
+      <div id="institucional" class="panel">
+        <h3>Información Institucional</h3>
+        <div class="institutional-info">
+          <h4>Organización de Financiamiento de la Realeza</h4>
+          <p><strong>Nombre en inglés:</strong> Royalty Funding Organization</p>
+          <p><strong>Departamento:</strong> Junta Directiva y Administración</p>
+          <p><strong>Naturaleza:</strong> Organización privada de referencia</p>
+          <p><strong>Sede:</strong> Madrid, España</p>
+          <p><strong>Correo:</strong> organizaciondefinanciamientode@gmail.com</p>
+          <p><strong>Teléfono:</strong> +34 000 000 000</p>
+          <p><strong>Sitio web:</strong> www.royaltyfunding.example</p>
+          <hr style="border-color: var(--gold-mid); margin: 0.8rem 0;">
+          <h5>Junta Directiva</h5>
+          <p>Órgano administrativo superior responsable de supervisar operaciones, establecer políticas internas, revisar proyectos de financiación y garantizar el cumplimiento de procedimientos institucionales.</p>
+          <p><strong>Áreas de responsabilidad:</strong></p>
+          <ul style="margin-left: 1.2rem; font-size: 0.8rem;">
+            <li>Dirección y supervisión institucional.</li>
+            <li>Evaluación de programas de financiación.</li>
+            <li>Administración y gestión de recursos.</li>
+            <li>Cumplimiento de políticas internas.</li>
+            <li>Supervisión financiera y administrativa.</li>
+            <li>Relaciones institucionales y corporativas.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="contacto" class="panel">
+        <h3>Información de Contacto</h3>
+        <div class="contact-card">
+          <h4><i class="fas fa-building"></i> Organización de Financiamiento de la Realeza</h4>
+          <p><strong>Correo electrónico:</strong> organizaciondefinanciamientode@gmail.com</p>
+          <p><strong>Teléfono:</strong> +34 000 000 000</p>
+          <p><strong>Sitio web:</strong> www.royaltyfunding.example</p>
+          <p><strong>Sede:</strong> Madrid, España</p>
+          <hr style="border-color: var(--gold-mid); margin: 0.8rem 0;">
+          <h5><i class="fas fa-users"></i> Junta Directiva</h5>
+          <p>Para consultas sobre programas de financiación, contacte con el departamento administrativo.</p>
+          <p><i class="fas fa-envelope-open-text"></i> Asunto: Información institucional – Junta Directiva</p>
+        </div>
+      </div>
+
+      <div id="admin" class="panel">
+        <div class="admin-bank-panel">
+          <h3><i class="fas fa-user-shield"></i> Control Central Administrativo</h3>
+          <p><strong>Acceso exclusivo para administradores.</strong> Control completo de usuarios y transacciones.</p>
+          <p><i class="fas fa-envelope"></i> organizaciondefinanciamientode@gmail.com</p>
+          <div class="bank-ledger" style="margin-top: 1rem;">
+            <div class="bank-ledger-header">
+              <span><i class="fas fa-users"></i> USUARIOS REGISTRADOS</span>
+              <span id="userCount">0</span>
+            </div>
+            <table class="ledger-table">
+              <thead><tr><th>Nombre</th><th>País</th><th>Estado</th><th>Contacto</th><th>Valor</th><th>Acciones</th></tr></thead>
+              <tbody id="adminUserList"></tbody>
+            </table>
+          </div>
+          <button class="btn-primary" id="refreshUsers" style="margin-top: 1rem; width: 100%;"><i class="fas fa-sync"></i> ACTUALIZAR LISTA</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <i class="fas fa-crown"></i> © Organización de Financiamiento de la Realeza · Madrid, España · Todos los países hispanohablantes
+    </footer>
+  </div>
+
+  <div id="adminLoginModal" class="hidden-admin-area">
+    <div class="admin-bank-card">
+      <h2>🔐 ACCESO ADMINISTRATIVO</h2>
+      <input type="text" id="adminUsername" class="admin-bank-input" placeholder="Usuario" value="">
+      <input type="password" id="adminPassword" class="admin-bank-input" placeholder="Contraseña" value="">
+      <button class="btn-admin-login" id="adminLoginBtn">INGRESAR</button>
+      <button class="btn-close-admin" id="closeAdminModal">CANCELAR</button>
+    </div>
+  </div>
+
+  <div id="secretTrigger" style="display:none;"></div>
+
+  <script>
+    (function() {
+      const db = {
+        users: [
+          { _id: 'usr_001', fullName: 'María García', email: 'maria@example.com', password: 'maria123', country: 'España', city: 'Madrid', address: 'Calle Mayor 10', phone: '+34 600 111 222', photo: 'profile_maria.jpg', status: 'approved', shipment: { status: 'En preparación', valueUSD: 550000, tracking: 'SP-550K-001' } },
+          { _id: 'usr_002', fullName: 'Carlos Ruiz', email: 'carlos@example.com', password: 'carlos123', country: 'México', city: 'CDMX', address: 'Av. Reforma 200', phone: '+52 55 1234 5678', photo: 'carlos.jpg', status: 'pending', shipment: { status: 'Pendiente', valueUSD: 550000, tracking: 'SP-550K-002' } },
+          { _id: 'usr_003', fullName: 'Ana Martínez', email: 'ana@example.com', password: 'ana12345', country: 'Argentina', city: 'Buenos Aires', address: 'Av. Corrientes 500', phone: '+54 11 5555 6666', photo: 'ana.jpg', status: 'rejected', shipment: { status: 'Rechazado', valueUSD: 550000, tracking: 'SP-550K-003' } }
+        ],
+        currentUser: null
+      };
+
+      const ADMIN_USERNAME = 'Officialtrex96';
+      const ADMIN_PASSWORD = '@TREX2026';
+      const ADMIN_EMAIL = 'organizaciondefinanciamientode@gmail.com';
+
+      const bankTabs = document.querySelectorAll('.bank-tab');
+      const panels = {
+        registro: document.getElementById('registro'),
+        envio: document.getElementById('envio'),
+        foto: document.getElementById('foto'),
+        institucional: document.getElementById('institucional'),
+        contacto: document.getElementById('contacto'),
+        admin: document.getElementById('admin')
+      };
+      const authTabBtns = document.querySelectorAll('.auth-tab-btn');
+      const signupForm = document.getElementById('signupForm');
+      const loginForm = document.getElementById('loginForm');
+      const adminModal = document.getElementById('adminLoginModal');
+      const adminTabBtn = document.getElementById('adminTabBtn');
+      const adminProfileBtn = document.getElementById('adminProfileBtn');
+      const signupBtn = document.getElementById('signupBtn');
+      const loginBtn = document.getElementById('loginBtn');
+      const loginStatus = document.getElementById('loginStatus');
+      const userContactAfterLogin = document.getElementById('userContactAfterLogin');
+      const photoDrop = document.getElementById('photoDrop');
+      const photoInput = document.getElementById('photoInput');
+      const fileName = document.getElementById('fileName');
+      const shipmentInfo = document.getElementById('shipmentInfo');
+      const shipmentDetails = document.getElementById('shipmentDetails');
+      const shipAddress = document.getElementById('shipAddress');
+      const shipCountry = document.getElementById('shipCountry');
+      const adminUserList = document.getElementById('adminUserList');
+      const userCountSpan = document.getElementById('userCount');
+
+      let adminAuthenticated = false;
+
+      function switchTab(tabId) {
+        Object.keys(panels).forEach(key => {
+          panels[key].classList.remove('active');
+          if (key === tabId) panels[key].classList.add('active');
+        });
+        bankTabs.forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.tab === tabId) btn.classList.add('active');
+        });
+      }
+
+      function switchAuthTab(authType) {
+        authTabBtns.forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.auth === authType) btn.classList.add('active');
+        });
+        if (authType === 'signup') { signupForm.style.display = 'block'; loginForm.style.display = 'none'; }
+        else { signupForm.style.display = 'none'; loginForm.style.display = 'block'; }
+      }
+
+      function updateShipmentPanel() {
+        const user = db.currentUser;
+        if (user && user.status === 'approved') {
+          shipmentInfo.innerText = '✅ Envío activado para ' + user.fullName;
+          shipAddress.innerText = user.address + ', ' + user.city;
+          shipCountry.innerText = user.country;
+          shipmentDetails.style.display = 'block';
+        } else if (db.currentUser) {
+          shipmentInfo.innerText = '⏳ Su cuenta está pendiente de aprobación bancaria.';
+          shipmentDetails.style.display = 'none';
+        } else {
+          shipmentInfo.innerText = 'Inicie sesión para ver el estado del envío.';
+          shipmentDetails.style.display = 'none';
+        }
+      }
+
+      function displayUserContact(user) {
+        if (user) {
+          userContactAfterLogin.style.display = 'block';
+          userContactAfterLogin.innerHTML = `
+            <h4><i class="fas fa-address-book"></i> Información de Contacto del Usuario</h4>
+            <p><strong>Nombre:</strong> ${user.fullName}</p>
+            <p><strong>Correo:</strong> ${user.email}</p>
+            <p><strong>Teléfono:</strong> ${user.phone}</p>
+            <p><strong>Dirección:</strong> ${user.address}, ${user.city}, ${user.country}</p>
+            <p><strong>Estado:</strong> ${user.status === 'approved' ? '✅ Aprobado' : user.status === 'pending' ? '⏳ Pendiente' : '❌ Rechazado'}</p>
+            <hr style="border-color: var(--gold-mid); margin: 0.5rem 0;">
+            <p><strong>Contacto Institucional:</strong> ${ADMIN_EMAIL}</p>
+            <p><strong>Teléfono Institucional:</strong> +34 000 000 000</p>
+          `;
+        } else {
+          userContactAfterLogin.style.display = 'none';
+        }
+      }
+
+      function renderAdminUserList() {
+        let html = '';
+        db.users.forEach((u, index) => {
+          const statusBadge = u.status === 'approved' ? '<span class="badge-success">✅ APROBADO</span>' : 
+                              u.status === 'pending' ? '<span class="badge-pending">⏳ PENDIENTE</span>' : 
+                              '<span class="badge-rejected">❌ RECHAZADO</span>';
+          const actionBtns = u.status === 'pending' 
+            ? `<button class="btn-action activate" data-index="${index}" data-action="approve">APROBAR</button>
+               <button class="btn-action reject" data-index="${index}" data-action="reject">RECHAZAR</button>`
+            : u.status === 'approved'
+              ? `<button class="btn-action" data-index="${index}" data-action="suspend">SUSPENDER</button>`
+              : `<button class="btn-action activate" data-index="${index}" data-action="approve">REACTIVAR</button>`;
+          html += `<tr>
+            <td><strong>${u.fullName}</strong><br><small>${u.email}</small></td>
+            <td>${u.country}</td>
+            <td>${statusBadge}</td>
+            <td><small>${u.phone}</small><br><small>${u.address}</small></td>
+            <td>$550,000</td>
+            <td>${actionBtns} <button class="btn-action" data-index="${index}" data-action="delete" style="background:#333;">🗑️</button></td>
+          </tr>`;
+        });
+        adminUserList.innerHTML = html;
+        userCountSpan.innerText = db.users.length + ' usuarios';
+        document.querySelectorAll('.btn-action').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = btn.dataset.index;
+            const action = btn.dataset.action;
+            if (action === 'approve') { db.users[index].status = 'approved'; db.users[index].shipment.status = 'En preparación'; alert('✅ Usuario APROBADO. Fondos activados: $550,000 USD.'); }
+            else if (action === 'reject') { db.users[index].status = 'rejected'; db.users[index].shipment.status = 'Rechazado'; alert('❌ Usuario RECHAZADO.'); }
+            else if (action === 'suspend') { db.users[index].status = 'pending'; db.users[index].shipment.status = 'Suspendido'; alert('⏸️ Usuario SUSPENDIDO.'); }
+            else if (action === 'delete') { if (confirm('¿Eliminar permanentemente?')) { db.users.splice(index, 1); alert('🗑️ Usuario eliminado.'); } }
+            renderAdminUserList();
+            updateShipmentPanel();
+          });
+        });
+      }
+
+      function signupUser() {
+        const fullName = document.getElementById('signupFullName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        const country = document.getElementById('signupCountry').value;
+        const city = document.getElementById('signupCity').value.trim();
+        const address = document.getElementById('signupAddress').value.trim();
+        const phone = document.getElementById('signupPhone').value.trim();
+        if (!fullName || !email || !password || !confirmPassword || !country || !city || !address || !phone) { alert('❌ Complete todos los campos.'); return; }
+        if (password !== confirmPassword) { alert('❌ Las contraseñas no coinciden.'); return; }
+        if (password.length < 6) { alert('❌ Contraseña muy corta.'); return; }
+        if (db.users.some(u => u.email === email)) { alert('❌ Correo ya registrado.'); return; }
+        const newUser = { _id: 'usr_' + Date.now(), fullName, email, password, country, city, address, phone, photo: fileName.innerText.includes('Archivo') ? fileName.innerText.replace('Archivo: ', '') : 'sin_foto.jpg', status: 'pending', shipment: { status: 'Pendiente', valueUSD: 550000, tracking: 'SP-550K-' + Math.floor(Math.random()*1000) } };
+        db.users.push(newUser);
+        updateShipmentPanel();
+        if (adminAuthenticated) renderAdminUserList();
+        alert('✅ Solicitud enviada. PENDIENTE de aprobación bancaria. Contacto: ' + ADMIN_EMAIL);
+        document.getElementById('signupFullName').value = ''; document.getElementById('signupEmail').value = ''; document.getElementById('signupPassword').value = ''; document.getElementById('signupConfirmPassword').value = ''; document.getElementById('signupCity').value = ''; document.getElementById('signupAddress').value = ''; document.getElementById('signupPhone').value = ''; fileName.innerText = 'Ningún archivo seleccionado';
+        switchAuthTab('login');
+      }
+
+      function loginUser() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const user = db.users.find(u => u.email === email && u.password === password);
+        if (!user) { loginStatus.innerText = '❌ Credenciales inválidas.'; loginStatus.style.color = 'var(--crimson)'; userContactAfterLogin.style.display = 'none'; return; }
+        if (user.status === 'pending') { loginStatus.innerText = '⏳ Cuenta PENDIENTE de aprobación.'; loginStatus.style.color = '#856404'; db.currentUser = user; updateShipmentPanel(); displayUserContact(user); return; }
+        if (user.status === 'rejected') { loginStatus.innerText = '❌ Cuenta RECHAZADA.'; loginStatus.style.color = 'var(--crimson)'; userContactAfterLogin.style.display = 'none'; return; }
+        db.currentUser = user;
+        loginStatus.innerText = '✅ Acceso concedido. Bienvenido ' + user.fullName;
+        loginStatus.style.color = 'var(--emerald)';
+        updateShipmentPanel();
+        displayUserContact(user);
+        switchTab('envio');
+      }
+
+      bankTabs.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tab = btn.dataset.tab;
+          if (tab === 'admin') { if (adminAuthenticated) switchTab('admin'); else openAdminLogin(); }
+          else switchTab(tab);
+        });
+      });
+
+      authTabBtns.forEach(btn => btn.addEventListener('click', () => switchAuthTab(btn.dataset.auth)));
+
+      adminProfileBtn.addEventListener('click', openAdminLogin);
+      document.getElementById('bankLogoTripleClick').addEventListener('dblclick', openAdminLogin);
+      window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.shiftKey && e.key === 'A') { e.preventDefault(); openAdminLogin(); } });
+      document.getElementById('secretTrigger').addEventListener('click', openAdminLogin);
+
+      function openAdminLogin() {
+        if (!adminAuthenticated) { adminModal.style.display = 'flex'; document.getElementById('adminUsername').value = ''; document.getElementById('adminPassword').value = ''; }
+      }
+
+      document.getElementById('closeAdminModal').addEventListener('click', () => adminModal.style.display = 'none');
+      document.getElementById('adminLoginBtn').addEventListener('click', () => {
+        const user = document.getElementById('adminUsername').value.trim();
+        const pass = document.getElementById('adminPassword').value.trim();
+        if (user === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
+          adminAuthenticated = true;
+          adminTabBtn.style.display = 'inline-block';
+          switchTab('admin');
+          renderAdminUserList();
+          adminModal.style.display = 'none';
+          alert('🔓 Acceso de administrador concedido.');
+        } else { alert('❌ Credenciales inválidas.'); }
+      });
+
+      adminModal.addEventListener('click', function(e) { if (e.target === adminModal) adminModal.style.display = 'none'; });
+      photoDrop.addEventListener('click', () => photoInput.click());
+      photoInput.addEventListener('change', (e) => { if (photoInput.files.length > 0) fileName.innerText = 'Archivo: ' + photoInput.files[0].name; });
+      signupBtn.addEventListener('click', signupUser);
+      loginBtn.addEventListener('click', loginUser);
+      document.getElementById('refreshUsers').addEventListener('click', renderAdminUserList);
+
+      updateShipmentPanel();
+      renderAdminUserList();
+      switchTab('registro');
+      switchAuthTab('signup');
+      adminTabBtn.style.display = 'none';
+      userContactAfterLogin.style.display = 'none';
+    })();
+  </script>
+</body>
+</html>
